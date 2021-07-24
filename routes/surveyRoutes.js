@@ -57,6 +57,7 @@ module.exports = (app) => {
       .map(({ email, url }) => {
         const match = p.test(new URL(url).pathname);
         if (match) {
+          console.log("MATCH FOUND", match);
           return {
             surveyId: match.surveyId,
             choice: match.choice,
