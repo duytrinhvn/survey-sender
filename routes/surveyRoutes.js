@@ -54,9 +54,10 @@ module.exports = (app) => {
   app.post("/api/surveys/webhooks", (req, res) => {
     const p = new Path("/api/surveys/:surveyId/:choice");
     console.log("REQ BODY", req.body);
-    console.log("P: ", p);
     _.chain(req.body)
       .map(({ email, url }) => {
+        console.log("EXTRACT BODY INFO: ", email, url);
+        console.log("URL PATH NAME: ", new URL(url).pathname);
         const match = p.test(new URL(url).pathname);
         console.log("MATCH: ", match);
         if (match) {
