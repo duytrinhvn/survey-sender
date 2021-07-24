@@ -54,11 +54,13 @@ module.exports = (app) => {
   app.post("/api/surveys/webhooks", (req, res) => {
     const p = new Path("/api/surveys/:surveyId/:choice");
     console.log("REQ BODY", req.body);
+    console.log("P: ", p);
     _.chain(req.body)
       .map(({ email, url }) => {
         const match = p.test(new URL(url).pathname);
+        console.log("MATCH: ", match);
         if (match) {
-          console.log("MATCH FOUND", match);
+          console.log("FOUND MATCH: ", match);
           return {
             surveyId: match.surveyId,
             choice: match.choice,
@@ -68,8 +70,8 @@ module.exports = (app) => {
       })
       .compact()
       .uniqBy("email", "surveyId")
-      .each(({ surveyId, email, choice }) => {
-        Survey.updateOne(
+      .each(async ({ surveyId, email, choice }) => {
+        const result = await Survey.updateOne(
           {
             _id: surveyId,
             recipients: {
@@ -85,9 +87,11 @@ module.exports = (app) => {
             lastResponded: new Date(),
           }
         ).exec();
+
+        console.log("SAVE TO DATABASE RESULT: ", result);
       })
       .value();
-
+    console.log("WEBHOOK ENDS");
     res.send({});
   });
 };
