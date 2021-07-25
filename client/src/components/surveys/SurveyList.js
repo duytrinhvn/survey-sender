@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchSurveys } from "../../actions";
+import { fetchSurveys } from "../../redux/surveys/surveys.actions";
 
 class SurveyList extends Component {
   componentDidMount() {
@@ -22,6 +22,7 @@ class SurveyList extends Component {
           <div className="card-action">
             <a>Yes: {survey.yes}</a>
             <a>No: {survey.no}</a>
+            <button className="btn red">Delete</button>
           </div>
         </div>
       );

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import formFields from "./formFields";
-import { submitSurvey } from "../../actions";
+import { submitSurvey } from "../../redux/surveys/surveys.actions";
 import { withRouter } from "react-router-dom";
 
 const SurveyFormReview = ({
