@@ -1,5 +1,5 @@
 import { FETCH_USER } from "../auth/auth.types";
-import { FETCH_SURVEYS } from "./surveys.types";
+import SurveysActionTypes from "./surveys.types";
 import axios from "axios";
 
 export const submitSurvey = (values, history) => async (dispatch) => {
@@ -13,5 +13,25 @@ export const submitSurvey = (values, history) => async (dispatch) => {
 export const fetchSurveys = () => async (dispatch) => {
   const res = await axios.get("/api/surveys");
 
-  dispatch({ type: FETCH_SURVEYS, payload: res.data });
+  dispatch({ type: SurveysActionTypes.FETCH_SURVEYS, payload: res.data });
+};
+
+export const deleteSurveyStart = (surveyId) => async (dispatch) => {
+  try {
+    dispatch({ type: SurveysActionTypes.DELETE_SURVEYS_START });
+
+    const res = await axios.delete("/api/surveys/delete", {
+      data: { surveyId },
+    });
+
+    dispatch({
+      type: SurveysActionTypes.DELETE_SURVEYS_SUCCESS,
+      payload: res.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SurveysActionTypes.DELETE_SURVEYS_FAILURE,
+      payload: error.message,
+    });
+  }
 };

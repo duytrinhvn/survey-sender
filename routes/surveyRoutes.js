@@ -22,6 +22,31 @@ module.exports = (app) => {
     res.send(surveys);
   });
 
+  app.delete("/api/surveys/delete", requireLogin, async (req, res) => {
+    const surveyId = req.body.surveyId;
+    // Check if survey was created by user
+    const survey = await Survey.findOne({
+      _user: req.user.id,
+      _id: surveyId,
+    });
+
+    if (survey === null) {
+      res
+        .status(400)
+        .send("Request failed! The survey might not created by this user");
+    }
+
+    try {
+      // Delete survey
+      await survey.deleteOne();
+      // Send response
+      res.send(surveyId);
+    } catch (error) {
+      console.log("ERROR: ", error.message);
+      res.status(500).send("Request failed! Something wrong on the server");
+    }
+  });
+
   app.post("/api/surveys", requireLogin, requireCredits, async (req, res) => {
     const { title, subject, body, recipients } = req.body;
 
